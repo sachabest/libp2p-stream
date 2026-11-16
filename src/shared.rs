@@ -60,7 +60,8 @@ impl Shared {
             return Err(AlreadyRegistered);
         }
 
-        let (sender, receiver) = mpsc::channel(0);
+        // A sender has one slot beyond the buffer; 0 dropped about half of concurrent inbound streams.
+        let (sender, receiver) = mpsc::channel(32);
         self.supported_inbound_protocols
             .insert(protocol.clone(), sender);
 
